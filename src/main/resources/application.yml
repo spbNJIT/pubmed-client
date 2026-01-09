@@ -3,7 +3,3 @@ spring:
 
 server:
   port: 8088
-
-javax.net.ssl:
-  trustStore: /Users/sbyrne/Library/Java/JavaVirtualMachines/corretto-21.0.9/Contents/Home/lib/security/cacerts
-  trustStorePassword: changeit
