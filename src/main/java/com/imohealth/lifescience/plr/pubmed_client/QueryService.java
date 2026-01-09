@@ -2,7 +2,6 @@ package com.imohealth.lifescience.plr.pubmed_client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.util.Map;
@@ -22,26 +23,27 @@ public class QueryService {
 
     public ResponseEntity<String> callPubMedSearch(String queryTerm) {
         logKeystoreLocation();
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("retmode","json");
+        queryParams.add("api_key","720f9b6f598f09919b4ec905b2482be71008");
+        queryParams.add("usehistory","y");
+        queryParams.add("retstart", "0");
+        queryParams.add("retmax", "10");
+        queryParams.add("db","pubmed");
         var client = RestClient.builder()
                 .baseUrl("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi")
-                .defaultUriVariables(
-                        Map.of("retmode","json",
-                                "api_key","720f9b6f598f09919b4ec905b2482be71008",
-                                "usehistory","y",
-                                "retstart",0,
-                                "retmax",10,
-                                "db","pubmed"
-                        ))
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
+                .defaultHeader(HttpHeaders.HOST,"www.ncbi.nlm.nih.gov")
                 .build();
-        var headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaType.ALL_VALUE);
-        headers.set(HttpHeaders.HOST, "www.ncbi.nlm.nih.gov");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("term", queryTerm);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("term", queryTerm);
+        log.info("formData:\n{}", formData);
         try {
-            return client.post().body(request).retrieve().toEntity(String.class);
+            return client.post()
+                    .uri(uriBuilder -> uriBuilder.queryParams(queryParams).build())
+                    .body(formData)
+                    .retrieve()
+                    .toEntity(String.class);
         } catch (Exception e) {
             log.error("Exception occurred while executing query ", e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FAILED_DEPENDENCY);
