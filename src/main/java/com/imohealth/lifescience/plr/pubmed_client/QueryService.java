@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
-import java.util.Map;
+import java.nio.file.FileSystems;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,7 +50,7 @@ public class QueryService {
 
     void logKeystoreLocation() {
         String javaHome = System.getProperty("java.home");
-        String separator = System.getProperty("file.separator");
+        String separator = FileSystems.getDefault().getSeparator();
 
         String cacertsPath = javaHome + separator + "lib" + separator
                 + "security" + separator + "cacerts";
