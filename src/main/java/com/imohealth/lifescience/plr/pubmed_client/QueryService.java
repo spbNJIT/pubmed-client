@@ -31,6 +31,7 @@ public class QueryService {
         queryParams.add("retstart", "0");
         queryParams.add("retmax", "10");
         queryParams.add("db", "pubmed");
+        log.info("sending parameters: {}", queryParams);
         var client = RestClient.builder()
                 .baseUrl("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi")
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
