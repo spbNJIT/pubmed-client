@@ -2,6 +2,7 @@ package com.imohealth.lifescience.plr.pubmed_client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,15 +20,17 @@ import java.nio.file.FileSystems;
 @Service
 public class QueryService {
 
+    @Value("${pubmed.api-key}") String pubMedApiKey;
+
     public ResponseEntity<String> callPubMedSearch(String queryTerm) {
         logKeystoreLocation();
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("retmode","json");
-        queryParams.add("api_key","720f9b6f598f09919b4ec905b2482be71008");
-        queryParams.add("usehistory","y");
+        queryParams.add("retmode", "json");
+        queryParams.add("api_key", pubMedApiKey);
+        queryParams.add("usehistory", "y");
         queryParams.add("retstart", "0");
         queryParams.add("retmax", "10");
-        queryParams.add("db","pubmed");
+        queryParams.add("db", "pubmed");
         var client = RestClient.builder()
                 .baseUrl("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi")
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
