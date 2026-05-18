@@ -20,6 +20,7 @@ import java.nio.file.FileSystems;
 @Service
 public class QueryService {
 
+    @Value("${pubmed.api-url}") String pubMedApiUrl;
     @Value("${pubmed.api-key}") String pubMedApiKey;
 
     public ResponseEntity<String> callPubMedSearch(String queryTerm) {
@@ -33,9 +34,8 @@ public class QueryService {
         queryParams.add("db", "pubmed");
         log.info("sending parameters: {}", queryParams);
         var client = RestClient.builder()
-                .baseUrl("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi")
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.ALL_VALUE)
-                .defaultHeader(HttpHeaders.HOST,"www.ncbi.nlm.nih.gov")
+                .baseUrl(pubMedApiUrl)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("term", queryTerm);
