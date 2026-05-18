@@ -30,3 +30,6 @@ replay_pid*
 /.idea/material_theme_project_new.xml
 /.idea/misc.xml
 /.idea/dictionaries/project.xml
+/target/classes/application.yml
+/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
