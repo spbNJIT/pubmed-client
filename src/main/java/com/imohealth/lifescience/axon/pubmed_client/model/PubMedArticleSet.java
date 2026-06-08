@@ -1,4 +1,4 @@
-package com.imohealth.lifescience.plr.pubmed_client.model;
+package com.imohealth.lifescience.axon.pubmed_client.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

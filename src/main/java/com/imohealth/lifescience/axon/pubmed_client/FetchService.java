@@ -1,12 +1,12 @@
-package com.imohealth.lifescience.plr.pubmed_client;
+package com.imohealth.lifescience.axon.pubmed_client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.imohealth.lifescience.plr.pubmed_client.model.PubMedArticle;
-import com.imohealth.lifescience.plr.pubmed_client.model.PubMedArticleSet;
-import com.imohealth.lifescience.plr.pubmed_client.model.PubMedSummaryResult;
+import com.imohealth.lifescience.axon.pubmed_client.model.PubMedArticle;
+import com.imohealth.lifescience.axon.pubmed_client.model.PubMedArticleSet;
+import com.imohealth.lifescience.axon.pubmed_client.model.PubMedSummaryResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;

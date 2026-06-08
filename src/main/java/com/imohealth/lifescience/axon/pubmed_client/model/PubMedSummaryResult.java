@@ -1,4 +1,4 @@
-package com.imohealth.lifescience.plr.pubmed_client.model;
+package com.imohealth.lifescience.axon.pubmed_client.model;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

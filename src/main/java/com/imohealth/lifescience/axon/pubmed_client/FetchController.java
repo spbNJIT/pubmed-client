@@ -1,7 +1,7 @@
-package com.imohealth.lifescience.plr.pubmed_client;
+package com.imohealth.lifescience.axon.pubmed_client;
 
-import com.imohealth.lifescience.plr.pubmed_client.model.PubMedArticle;
-import com.imohealth.lifescience.plr.pubmed_client.model.PubMedSummaryResult;
+import com.imohealth.lifescience.axon.pubmed_client.model.PubMedArticle;
+import com.imohealth.lifescience.axon.pubmed_client.model.PubMedSummaryResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

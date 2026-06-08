@@ -1,4 +1,4 @@
-package com.imohealth.lifescience.plr.pubmed_client;
+package com.imohealth.lifescience.axon.pubmed_client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
