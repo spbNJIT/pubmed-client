@@ -4,5 +4,4 @@ spring:
 server:
   port: 8088
 
-pubmed:
-  api-url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+pubmed.base-url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"

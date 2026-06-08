@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -15,27 +14,23 @@ import org.springframework.web.client.RestClient;
 import java.io.File;
 import java.nio.file.FileSystems;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class QueryService {
 
-    @Value("${pubmed.api-url}") String pubMedApiUrl;
     @Value("${pubmed.api-key}") String pubMedApiKey;
+    @Value("${pubmed.base-url}") String pubMedBaseUrl;
 
     public ResponseEntity<String> callPubMedSearch(String queryTerm) {
         logKeystoreLocation();
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("retmode", "json");
-        queryParams.add("api_key", pubMedApiKey);
-        queryParams.add("usehistory", "y");
-        queryParams.add("retstart", "0");
-        queryParams.add("retmax", "10");
-        queryParams.add("db", "pubmed");
+        var queryParams = defaultParams();
         log.info("sending parameters: {}", queryParams);
         var client = RestClient.builder()
-                .baseUrl(pubMedApiUrl)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .baseUrl(pubMedBaseUrl + "/esearch.fcgi")
+                .defaultHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
                 .build();
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("term", queryTerm);
@@ -50,6 +45,17 @@ public class QueryService {
             log.error("Exception occurred while executing query ", e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FAILED_DEPENDENCY);
         }
+    }
+
+    private MultiValueMap<String, String> defaultParams() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("retmode", "json");
+        queryParams.add("api_key", pubMedApiKey);
+        queryParams.add("usehistory", "y");
+        queryParams.add("retstart", "0");
+        queryParams.add("retmax", "10");
+        queryParams.add("db", "pubmed");
+        return queryParams;
     }
 
     void logKeystoreLocation() {

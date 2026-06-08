@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class QueryController {
 
-    private final QueryService queryService;
+    final QueryService queryService;
 
     @PostMapping("/pubmed/query")
     ResponseEntity<String> searchPubMed(@RequestBody String queryTerm) {
