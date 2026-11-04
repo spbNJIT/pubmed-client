@@ -1,7 +1,22 @@
 spring:
   application.name: pubmed-client
+  mvc:
+    async:
+      # StreamingResponseBody runs as an async request; the container default (~30s) would cut off large PDF archives
+      request-timeout: 30m
 
 server:
   port: 8088
 
 pubmed.base-url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+
+pmc:
+  bucket-url: "https://pmc-oa-opendata.s3.amazonaws.com"
+  id-converter-url: "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
+  tool: "pubmed-client"
+  # NCBI asks ID Converter callers to identify themselves; the parameter is omitted when blank
+  email: "${PMC_EMAIL:}"
+  id-converter-batch-size: 200
+  max-pmids: 500
+  connect-timeout: 10s
+  read-timeout: 60s
