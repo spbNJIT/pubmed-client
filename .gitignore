@@ -22,7 +22,12 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
-/.idea/workspace.xml
+
+# IntelliJ IDEA project settings
+/.idea/
+
+# macOS Finder metadata
+.DS_Store
 /target/classes/application.yml
 /target/test-classes/application-test.yml
 /target/surefire-reports/com.imohealth.lifescience.axon.pubmed_client.PubmedClientApplicationTests.txt
