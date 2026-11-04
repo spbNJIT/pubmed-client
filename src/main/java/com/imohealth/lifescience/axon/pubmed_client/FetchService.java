@@ -8,7 +8,6 @@ import com.imohealth.lifescience.axon.pubmed_client.model.PubMedArticle;
 import com.imohealth.lifescience.axon.pubmed_client.model.PubMedArticleSet;
 import com.imohealth.lifescience.axon.pubmed_client.model.PubMedSummaryResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -24,13 +23,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Service
 public class FetchService {
 
-    @Value("${pubmed.api-key}") String pubMedApiKey;
-    @Value("${pubmed.base-url}") String pubMedBaseUrl;
-
+    private final PubMedProperties properties;
     private final XmlMapper xmlMapper;
     private final ObjectMapper jsonMapper;
 
-    public FetchService() {
+    public FetchService(PubMedProperties properties) {
+        this.properties = properties;
         XMLInputFactory inputFactory = XMLInputFactory.newFactory();
         inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
         inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
@@ -47,7 +45,7 @@ public class FetchService {
         log.info("Fetching articles for PMIDs: {}", ids);
 
         var client = RestClient.builder()
-                .baseUrl(pubMedBaseUrl + "/efetch.fcgi")
+                .baseUrl(properties.baseUrl() + "/efetch.fcgi")
                 .build();
 
         String xml = client.get()
@@ -55,7 +53,7 @@ public class FetchService {
                         .queryParam("db", "pubmed")
                         .queryParam("id", ids)
                         .queryParam("retmode", "xml")
-                        .queryParam("api_key", pubMedApiKey)
+                        .queryParam("api_key", properties.apiKey())
                         .build())
                 .retrieve()
                 .body(String.class);
@@ -75,7 +73,7 @@ public class FetchService {
         log.info("Fetching summaries for PMIDs: {}", ids);
 
         var client = RestClient.builder()
-                .baseUrl(pubMedBaseUrl + "/esummary.fcgi")
+                .baseUrl(properties.baseUrl() + "/esummary.fcgi")
                 .defaultHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE)
                 .build();
 
@@ -84,7 +82,7 @@ public class FetchService {
                         .queryParam("db", "pubmed")
                         .queryParam("id", ids)
                         .queryParam("retmode", "json")
-                        .queryParam("api_key", pubMedApiKey)
+                        .queryParam("api_key", properties.apiKey())
                         .build())
                 .retrieve()
                 .body(String.class);

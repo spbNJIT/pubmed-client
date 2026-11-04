@@ -9,6 +9,8 @@ server:
   port: 8088
 
 pubmed.base-url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+# PMIDs returned by /pubmed/query when the caller does not pass retmax
+pubmed.search.default-retmax: 10
 
 pmc:
   bucket-url: "https://pmc-oa-opendata.s3.amazonaws.com"
