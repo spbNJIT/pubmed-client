@@ -17,6 +17,8 @@ curl -X POST localhost:8088/pmc/pdf \
 | `400 Bad Request` | Body missing or empty, or more than `pmc.max-pmids` distinct PMIDs |
 | `424 Failed Dependency` | The PMC ID Converter API failed |
 
+Interactive API docs for all endpoints are served at `/swagger-ui.html`, and the OpenAPI spec at `/v3/api-docs` (`/v3/api-docs.yaml` for YAML).
+
 ## Archive Contents
 
 - `<pmid>_PMC<id>.<version>.pdf` - one PDF per PMID that has one, e.g. `36537061_PMC10009416.1.pdf`
