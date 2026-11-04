@@ -17,6 +17,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 class QueryServiceTest {
@@ -41,8 +42,8 @@ class QueryServiceTest {
                 .andExpect(queryParam("retstart", "20"))
                 .andExpect(queryParam("retmax", "50"))
                 .andExpect(queryParam("db", "pubmed"))
-                .andExpect(queryParam("api_key", "test-key"))
-                .andExpect(content().formDataContains(Map.of("term", "asthma")))
+                .andExpect(request -> assertThat(request.getURI().getQuery()).doesNotContain("api_key"))
+                .andExpect(content().formDataContains(Map.of("term", "asthma", "api_key", "test-key")))
                 .andRespond(withSuccess("{\"esearchresult\":{\"count\":\"100\"}}", MediaType.APPLICATION_JSON));
 
         var response = service.callPubMedSearch("asthma", 20, 50);
@@ -62,6 +63,19 @@ class QueryServiceTest {
         service.callPubMedSearch("asthma", 0, null);
 
         server.verify();
+    }
+
+    @Test
+    void masksApiKeyEchoedInErrorResponse() {
+        server.expect(requestTo(startsWith(ESEARCH_URL)))
+                .andRespond(withStatus(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body("{\"error\":\"API key invalid\",\"api-key\":\"test-key\"}"));
+
+        var response = service.callPubMedSearch("asthma", 0, null);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FAILED_DEPENDENCY);
+        assertThat(response.getBody()).doesNotContain("test-key").contains(QueryService.API_KEY_MASK);
     }
 
     @Test
